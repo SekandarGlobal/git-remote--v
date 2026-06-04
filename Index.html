@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>The Great Sekandar</title>
+    <style>
+        /* ==========================================================================
+           1. MASTER SYSTEM & RESET
+           ========================================================================== */
+        :root {
+            --bg-color: #5f18eb;
+            --cta-color: #8ef013;
+            --cta-hover: #7ed900;
+            --cta-active: #6ab800;
+            --text-primary: #ffffff;
+            --text-secondary: rgba(255, 255, 255, 0.7);
+            --text-btn: #000000;
+            
+            /* Responsive Defaults (Tablet & Desktop 600px+) */
+            --profile-size: 140px;
+            --name-size: 32px;
+            --btn-width: 280px;
+            --btn-height: 56px;
+            --gap-main: 28px;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            text-rendering: optimizeLegibility;
+        }
+
+        html, body {
+            width: 100vw;
+            height: 100vh;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            background-color: var(--bg-color);
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        }
+
+        /* ==========================================================================
+           2. LAYOUT & CONTAINERS
+           ========================================================================== */
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .main-container {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            width: 100vw;
+            height: 100vh;
+            gap: var(--gap-main);
+            text-align: center;
+            
+            /* Safe area padding configuration */
+            padding-top: calc(20px + env(safe-area-inset-top, 0px));
+            padding-bottom: calc(40px + env(safe-area-inset-bottom, 0px));
+            padding-left: calc(16px + env(safe-area-inset-left, 0px));
+            padding-right: calc(16px + env(safe-area-inset-right, 0px));
+            max-width: min(90vw, 320px);
+            margin: 0 auto;
+        }
+
+        /* ==========================================================================
+           3. ELEMENTS STYLING
+           ========================================================================== */
+        
+        /* Profile Image Section */
+        .profile-container {
+            width: var(--profile-size);
+            height: var(--profile-size);
+            border-radius: 50%;
+            border: 3px solid var(--text-primary);
+            box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.2);
+            overflow: hidden;
+            display: block;
+            opacity: 0;
+            animation: fadeIn 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94) 0.2s forwards;
+        }
+
+        .profile-img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            object-position: center;
+        }
+
+        /* Name + Verification Row */
+        .identity-row {
+            display: flex;
+            flex-direction: row;
+            justify-content: center;
+            align-items: center;
+            flex-wrap: nowrap;
+            width: auto;
+            gap: 8px;
+        }
+
+        .name {
+            color: var(--text-primary);
+            font-size: var(--name-size);
+            font-weight: 700;
+            line-height: 1.2;
+            letter-spacing: 0.5px;
+            text-transform: capitalize;
+            opacity: 0;
+            animation: fadeIn 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94) 0.4s forwards;
+        }
+
+        .badge {
+            width: 24px;
+            height: 24px;
+            object-fit: contain;
+            background: transparent;
+            border: none;
+            opacity: 0;
+            animation: badgeBounceIn 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) 0.5s forwards;
+        }
+
+        /* Micro Description text */
+        .description {
+            font-size: 13px;
+            font-weight: 400;
+            line-height: 1.4;
+            letter-spacing: 0.3px;
+            color: var(--text-secondary);
+            max-width: 280px;
+            padding: 0 16px;
+            margin-top: -12px; /* Pull closer to header row per spec gap sequence */
+            opacity: 0;
+            animation: fadeIn 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94) 0.6s forwards;
+        }
+
+        /* Call To Action Button */
+        .cta-button {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: var(--btn-width);
+            height: var(--btn-height);
+            background-color: var(--cta-color);
+            color: var(--text-btn);
+            font-size: 16px;
+            font-weight: 600;
+            letter-spacing: 0.3px;
+            text-decoration: none;
+            border-radius: 12px;
+            border: none;
+            outline: none;
+            box-shadow: 0px 4px 12px rgba(142, 240, 19, 0.3);
+            cursor: pointer;
+            user-select: none;
+            -webkit-user-select: none;
+            touch-action: manipulation;
+            -webkit-appearance: none;
+            opacity: 0;
+            animation: scaleBounceIn 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) 0.8s forwards;
+            transition: background-color 0.2s ease-out, transform 0.2s ease-out, box-shadow 0.2s ease-out;
+        }
+
+        /* Desktop Interactive Feedback */
+        @media (hover: hover) {
+            .profile-container:hover {
+                transform: scale(1.02);
+                transition: all 0.3s ease-out;
+            }
+            .cta-button:hover {
+                background-color: var(--cta-hover);
+                transform: scale(1.05);
+                box-shadow: 0px 6px 16px rgba(142, 240, 19, 0.4);
+            }
+        }
+
+        /* Active / Press Haptic State Feedback */
+        .cta-button:active {
+            background-color: var(--cta-active) !important;
+            transform: scale(0.98) !important;
+            box-shadow: 0px 2px 4px rgba(142, 240, 19, 0.2) !important;
+            transition: all 0.1s ease-out;
+        }
+
+        /* Keyboard Focus Outline */
+        .cta-button:focus-visible {
+            outline: 2px solid var(--text-primary);
+            outline-offset: 2px;
+        }
+
+        /* ==========================================================================
+           4. RESPONSIVE BREAKPOINTS Meta Settings
+           ========================================================================== */
+        
+        /* Small Mobile Devices (320px - 374px) */
+        @media (max-width: 374px) {
+            :root {
+                --profile-size: 110px;
+                --name-size: 20px;
+                --btn-width: 220px;
+                --btn-height: 48px;
+                --gap-main: 16px;
+            }
+            .description {
+                font-size: 12px;
+            }
+            .cta-button {
+                font-size: 15px;
+            }
+        }
+
+        /* Standard Mobile Devices (375px - 424px) */
+        @media (min-width: 375px) and (max-width: 424px) {
+            :root {
+                --profile-size: 120px;
+                --name-size: 24px;
+                --btn-width: 240px;
+                --btn-height: 54px;
+                --gap-main: 20px;
+            }
+            .description {
+                font-size: 12px;
+            }
+            .cta-button {
+                font-size: 15px;
+            }
+        }
+
+        /* Large Mobile Devices (425px - 599px) */
+        @media (min-width: 425px) and (max-width: 599px) {
+            :root {
+                --profile-size: 130px;
+                --name-size: 28px;
+                --btn-width: 260px;
+                --btn-height: 54px;
+                --gap-main: 24px;
+            }
+        }
+
+        /* ==========================================================================
+           5. ANIMATIONS SYSTEM SPECIFICATIONS
+           ========================================================================== */
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes scaleBounceIn {
+            from {
+                opacity: 0;
+                transform: scale(0.95);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        @keyframes badgeBounceIn {
+            from {
+                opacity: 0;
+                transform: scale(0.8);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        /* Accessibility: Reduced Motion Framework Adjustments */
+        @media (prefers-reduced-motion: reduce) {
+            * {
+                animation-duration: 0.2s !important;
+                animation-delay: 0s !important;
+                transition-duration: 0.2s !important;
+            }
+            @keyframes scaleBounceIn {
+                from { opacity: 0; }
+                to { opacity: 1; }
+            }
+            @keyframes badgeBounceIn {
+                from { opacity: 0; }
+                to { opacity: 1; }
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <main class="main-container">
+        <div class="profile-container">
+            <img class="profile-img" 
+                 src="https://ik.imagekit.io/f8dc2modt/IMG_20260604_121215_836.jpg" 
+                 alt="The Great Sekandar Identity Verification Face Shot">
+        </div>
+
+        <div class="identity-row">
+            <h1 class="name">The Great Sekandar</h1>
+            <img class="badge" 
+                 src="https://ik.imagekit.io/f8dc2modt/verification-min-Photoroom.png?updatedAt=1776380266188" 
+                 alt="Official Verified Account Checkmark Badge">
+        </div>
+
+        <p class="description">Available for chat</p>
+
+        <a class="cta-button" 
+           href="https://wa.me/message/YZ7R7ULM5DWNA1" 
+           target="_blank" 
+           rel="noopener noreferrer" 
+           aria-label="Open WhatsApp chat window to connect with The Great Sekandar"
+           tabindex="0">
+            Start Chatting
+        </a>
+    </main>
+
+</body>
+</html>
+              
